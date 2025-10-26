@@ -1,0 +1,137 @@
+﻿@model Forum.ViewModels.RegisterViewModel
+
+<div class="auth-container">
+    <div class="w-100" style="max-width: 450px; padding: 1rem;">
+        <a href="@Url.Action("Index", "Question")" class="btn btn-link text-decoration-none mb-4 p-0">
+            <i class="bi bi-arrow-left me-2"></i>Quay lại
+        </a>
+
+        <div class="auth-card shadow">
+            <div class="text-center mb-4">
+                <div class="mx-auto mb-3"
+                     style="width: 64px; height: 64px; background: linear-gradient(135deg, #2196f3, #1976d2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <span class="text-white fs-2 fw-semibold">F</span>
+                </div>
+                <h1 class="h4 mb-2">Tạo tài khoản mới</h1>
+                <p class="text-muted">Tham gia cộng đồng ForumHub ngay hôm nay</p>
+            </div>
+
+            @using (Html.BeginForm("Register", "User", FormMethod.Post, new { @class = "" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                <!-- User Name -->
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.UserName, new { @class = "form-label" })
+                    <div class="position-relative">
+                        <i class="bi bi-person position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control ps-5", placeholder = "Tên đăng nhập" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger small" })
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                    <div class="position-relative">
+                        <i class="bi bi-envelope position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control ps-5", placeholder = "your.email@example.com", type = "email" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                    <div class="position-relative">
+                        <i class="bi bi-lock position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control ps-5 pe-5", placeholder = "••••••••" })
+                        <button type="button"
+                                class="btn btn-link position-absolute top-50 translate-middle-y end-0 text-muted"
+                                onclick="togglePassword('Password', 'toggleIcon1')">
+                            <i class="bi bi-eye" id="toggleIcon1"></i>
+                        </button>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                    <small class="text-muted">Tối thiểu 6 ký tự</small>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label" })
+                    <div class="position-relative">
+                        <i class="bi bi-lock-fill position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control ps-5 pe-5", placeholder = "••••••••" })
+                        <button type="button" 
+                                class="btn btn-link position-absolute top-50 translate-middle-y end-0 text-muted" 
+                                onclick="togglePassword('ConfirmPassword', 'toggleIcon2')">
+                            <i class="bi bi-eye" id="toggleIcon2"></i>
+                        </button>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger small" })
+                </div>
+
+                <!-- Terms -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" required checked="checked">
+                        <label class="form-check-label small" for="terms">
+                            Tôi đồng ý với 
+                            <a href="#" class="text-primary">Điều khoản sử dụng</a> 
+                            và 
+                            <a href="#" class="text-primary">Chính sách bảo mật</a>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    Đăng ký
+                </button>
+
+                <!-- Divider -->
+                <div class="text-center text-muted mb-3 position-relative">
+                    <span class="bg-white px-2 position-relative" style="z-index: 1;">hoặc</span>
+                    <hr class="position-absolute start-0 end-0" style="margin-top: -0.7rem; z-index: 0;">
+                </div>
+
+                <!-- Social Login -->
+                <div class="d-grid gap-2 mb-4">
+                    <button type="button" class="btn btn-outline-secondary">
+                        <i class="bi bi-google me-2"></i>Đăng ký với Google
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <i class="bi bi-facebook me-2"></i>Đăng ký với Facebook
+                    </button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="text-center">
+                    <span class="text-muted">Đã có tài khoản?</span>
+                    <a href="@Url.Action("Login", "User")" class="text-primary text-decoration-none ms-1">Đăng nhập</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+    </script>
+}

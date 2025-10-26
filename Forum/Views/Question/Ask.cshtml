@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Ask";
+}
+
+<!-- Main Content -->
+<div class="container py-4">
+
+    <!-- Back Button -->
+    <a href="@Url.Action("Index")" class="btn btn-link text-decoration-none mb-3 p-0">
+        <i class="bi bi-arrow-left me-2"></i>Quay lại
+    </a>
+    <div class="row">
+        <div class="col-lg-9 mx-auto">
+            <!-- Create Post Form -->
+            <div class="post-container">
+                <div class="p-4">
+                    <h1 class="h4 mb-4">Tạo bài viết mới</h1>
+
+                    <form method="post" action="@Url.Action("Ask")">
+                        @Html.AntiForgeryToken()
+                        <!-- Category -->
+                        @*<div class="mb-3">
+                                <label for="category" class="form-label fw-semibold">Danh mục</label>
+                                <select class="form-select" id="category" required>
+                                    <option value="">Chọn danh mục...</option>
+                                    <option value="programming">Lập trình</option>
+                                    <option value="design">Thiết kế</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="startup">Khởi nghiệp</option>
+                                    <option value="career">Nghề nghiệp</option>
+                                </select>
+                            </div>*@
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label fw-semibold">Tiêu đề</label>
+                            <input name="title" type="text" class="form-control" id="title" placeholder="Nhập tiêu đề bài viết..." required>
+                            <small class="text-muted">Tiêu đề rõ ràng và súc tích sẽ thu hút nhiều người đọc hơn</small>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="mb-3">
+                            <label for="content" class="form-label fw-semibold">Nội dung</label>
+                            <textarea name="body" class="form-control" id="content" rows="10" placeholder="Viết nội dung chi tiết..." required></textarea>
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Hỗ trợ Markdown. Sử dụng ** để in đậm, * để in nghiêng
+                            </small>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="mb-3">
+                            <label for="tags" class="form-label fw-semibold">Tags</label>
+                            <input name="tags" type="text" class="form-control" id="tags" placeholder="React, JavaScript, Web Development">
+                            <small class="text-muted">Ngăn cách bằng dấu phẩy. Tối đa 5 tags</small>
+
+                            <!-- Tag Preview -->
+                            <div class="mt-2" id="tagPreview"></div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <!--<div class="mb-4">
+                            <label for="image" class="form-label fw-semibold">Hình ảnh (tùy chọn)</label>
+                            <input class="form-control" type="file" id="image" accept="image/*">
+                            <small class="text-muted">PNG, JPG, GIF. Tối đa 5MB</small>
+                        </div>-->
+                        <!-- Actions -->
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Hủy</a>
+                            <button type="button" class="btn btn-outline-primary">Lưu nháp</button>
+                            <button type="submit" class="btn btn-primary">Đăng bài</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <!-- Tips Card -->
+            <div class="mb-2 p-4 bg-primary bg-opacity-10 rounded border border-primary border-opacity-25">
+                <h6 class="fw-semibold mb-3"><i class="bi bi-lightbulb text-primary me-2"></i>Mẹo viết bài hiệu quả</h6>
+                <ul class="small mb-0 ps-3">
+                    <li class="mb-2">Tiêu đề nên rõ ràng, súc tích và hấp dẫn</li>
+                    <li class="mb-2">Nội dung nên có cấu trúc, dễ đọc với đoạn văn ngắn</li>
+                    <li class="mb-2">Sử dụng tags phù hợp để người khác dễ tìm thấy</li>
+                    <li class="mb-2">Thêm hình ảnh minh họa để bài viết sinh động hơn</li>
+                    <li>Kiểm tra chính tả trước khi đăng bài</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
