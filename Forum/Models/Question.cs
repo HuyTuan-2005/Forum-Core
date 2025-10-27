@@ -9,8 +9,9 @@
         public DateTime CreateAt { get; set; }
 
 
-        public virtual User User { get; set; }
+        public User User { get; set; }
         public ICollection<Tag> Tags { get; set; }
+        public ICollection<Answer> Answer { get; set; }
 
         public Question()
         {

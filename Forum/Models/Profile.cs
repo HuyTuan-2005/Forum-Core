@@ -8,6 +8,6 @@
         public Nullable<System.DateTime> Birthday { get; set; }
         public string Gender { get; set; }
 
-        public virtual User User{ get; set; }
+        public User User{ get; set; }
     }
 }

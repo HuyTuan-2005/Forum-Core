@@ -8,7 +8,7 @@
         public string Body { get; set; }
         public Nullable<System.DateTime> CreateAt { get; set; }
 
-        public virtual Question Question { get; set; }
-        public virtual User User { get; set; }
+        public Question Question { get; set; }
+        public User User { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Home Page";
 }
+
 @model IEnumerable<Forum.Models.Question>
 
 <!-- Main Content -->
@@ -132,16 +133,16 @@
                                     @foreach (var tag in i.Tags)
                                     {
                                         <span class="tag">@tag.TagName</span>
-                                        <div class="forum-stats">
-                                            @* <span><i class="bi bi-chat"></i> @i..Count</span>  *@
-                                            <span><i class="bi bi-eye"></i> 1250</span>
-                                            <span><i class="bi bi-hand-thumbs-up"></i> 48</span>
-                                            <span class="ms-auto"><i class="bi bi-clock"></i>@Forum.Helpers.DateTimeHelper.ConvertDateToString(i.CreateAt)</span>
-                                        </div>
+
                                     }
                                 </div>
 
-
+                                <div class="forum-stats">
+                                    <span><i class="bi bi-chat"></i> @i.Answer.Count</span>
+                                    <span><i class="bi bi-eye"></i> 1250</span>
+                                    <span><i class="bi bi-hand-thumbs-up"></i> 48</span>
+                                    <span class="ms-auto"><i class="bi bi-clock"></i>@Forum.Helpers.DateTimeHelper.ConvertDateToString(i.CreateAt)</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -177,7 +178,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>*@
                 <!-- Post 3 -->
                 <!--<div class="forum-card">
                     <div class="d-flex gap-3">
@@ -212,6 +213,6 @@
                     <button class="btn btn-outline-secondary">Tải thêm bài viết</button>
                 </div>
             </div>
-        </div>*@
+        </div>
     </main>
 </div>

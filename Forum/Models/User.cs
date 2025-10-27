@@ -8,6 +8,7 @@ namespace Forum.Models
         public DateTime LastActivity {  get; set; }
 
         public ICollection<Question> Questions { get; set; }
+        public Profile Profile { get; set; }
 
     }
 }

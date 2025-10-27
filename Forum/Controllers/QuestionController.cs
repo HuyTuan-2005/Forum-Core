@@ -20,7 +20,7 @@ namespace Forum.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.Questions.ToList());
+            return View(_context.Questions.Include(x => x.Tags).Include(x => x.Answer).ToList());
         }
 
         public async Task<IActionResult> Details(int? id)
