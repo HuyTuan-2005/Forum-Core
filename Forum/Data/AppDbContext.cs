@@ -9,6 +9,8 @@ namespace Forum.Data
     {
         public DbSet<Question> Questions { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Profile> Profile { get; set; }
+        public DbSet<Answer> Answers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

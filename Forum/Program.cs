@@ -12,6 +12,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Dang ky Identity
+builder.Services.AddIdentity<User, Role>().
+    AddEntityFrameworkStores<AppDbContext>().
+    AddDefaultTokenProviders();
 
 // Dang ky identity dùng UI
 
@@ -19,6 +23,10 @@ builder.Services.Configure<IdentityOptions>(options =>
 {
     // Thiết lập về password
     options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+
 
     // Cấu hình lockout - Khoá user
     // Khoá 5 phút
