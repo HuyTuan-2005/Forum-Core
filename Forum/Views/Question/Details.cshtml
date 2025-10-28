@@ -1,6 +1,8 @@
-﻿@{
+﻿
+@{
 }
 @model Forum.Models.Question
+
 
 <!-- Main Content -->
 <div class="container py-4">
@@ -15,12 +17,12 @@
         <div class="post-header">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-3">
-                    <a href="@Url.Action("Index", "Users", new { id = Model.UserId })">
+                    <a href="@Url.Action("Index", "User", new { id = Model.User.Id })">
                         <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
                              alt="User" class="user-avatar rounded-circle" width="48" height="48">
                     </a>
                     <div>
-                        <div class="fw-semibold">@Model.User.UserName</div>
+                        <div class="fw-semibold">@Model.User.Profile.DisplayName</div>
                         <div class="text-muted small">@Forum.Helpers.DateTimeHelper.ConvertDateToString(Model.CreateAt)</div>
                     </div>
                 </div>
@@ -81,66 +83,68 @@
                 <h2 class="h6 mb-0 ">Viết câu trả lời của bạn</h2>
             </div>
             <!-- Reply Form -->
-            <div class="d-flex gap-3">
-
+            @using(Html.BeginForm("PostAnswer", "Question", FormMethod.Post, new{@class="d-flex gap-3"}))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("QuestionId", Model.QuestionId)
                 <div class="flex-grow-1">
-                    <textarea class="form-control mb-2" rows="3" placeholder="Viết câu trả lời của bạn..."></textarea>
+                    <textarea name="body" class="form-control mb-2" rows="3" placeholder="Viết câu trả lời của bạn..."></textarea>
                     <div class="d-flex justify-content-end gap-2">
                         <button class="btn btn-outline-secondary btn-sm">Hủy</button>
                         <button class="btn btn-primary btn-sm">Gửi câu trả lời</button>
                     </div>
                 </div>
-            </div>
+            }
         </div>
 
-        @* <div class=""> *@
-        @*     @if (Model.ANSWERS.Count > 0) *@
-        @*     { *@
-        @*         <h2 class="h6 mb-0 p-4 pb-0">@Model.ANSWERS.Count Câu trả lời khác</h2> *@
-        @*     } *@
-        @*     <!-- Comment 1 --> *@
-        @*     @foreach (var i in Model.ANSWERS) *@
-        @*     { *@
-        @*         <div class="comment-item"> *@
-        @*             <div class="d-flex gap-3"> *@
-        @*                 <a href="@Url.Action("Index", "Users", new {id = i.USER_ID})"> *@
-        @*                     <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" *@
-        @*                          alt="User" class="user-avatar comment-avatar"> *@
-        @*                 </a> *@
-        @*                 <div class="flex-grow-1"> *@
-        @*                     <div class="d-flex align-items-center gap-2 mb-2"> *@
-        @*                         <span class="fw-semibold">@i.USER.USERNAME</span> *@
-        @*                         <span class="member-badge">Thành viên</span> *@
-        @*                         <span class="text-muted">• @Forum.Helpers.DateTimeHelper.ConvertDateToString(i.CREATED_AT.Value)</span> *@
-        @*                     </div> *@
-        @* *@
-        @*                     <p class="mb-3" style="line-height: 1.7;"> *@
-        @*                         @i.BODY *@
-        @*                     </p> *@
-        @* *@
-        @*                     <div class="d-flex align-items-center gap-3"> *@
-        @*                         <div class="d-flex align-items-center gap-2"> *@
-        @*                             <div class="me-2"> *@
-        @*                                 <button class="vote-btn" onclick="toggleVote(this, 'up')"> *@
-        @*                                     <i class="bi bi-hand-thumbs-up"></i> *@
-        @*                                 </button> *@
-        @*                                 <span class="vote-count">15</span> *@
-        @*                             </div> *@
-        @* *@
-        @*                             <button class="vote-btn" onclick="toggleVote(this, 'down')"> *@
-        @*                                 <i class="bi bi-hand-thumbs-down"></i> *@
-        @*                             </button> *@
-        @*                         </div> *@
-        @*                         <button class="btn btn-sm btn-link text-decoration-none text-secondary p-0"> *@
-        @*                             Trả lời *@
-        @*                         </button> *@
-        @*                     </div> *@
-        @*                 </div> *@
-        @*             </div> *@
-        @*         </div> *@
-        @*     } *@
+        <div class="">
+            @if (Model.Answer.Count > 0)
+            {
+                <h2 class="h6 mb-0 p-4 pb-0">@Model.Answer.Count Câu trả lời khác</h2>
+            }
+            <!-- Comment 1 -->
+            @foreach (var i in Model.Answer)
+            {
+                <div class="comment-item">
+                    <div class="d-flex gap-3">
+                        <a href="@Url.Action("Index", "User", new {id = i.UserId})">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
+                                 alt="User" class="user-avatar comment-avatar">
+                        </a>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="fw-semibold">@i.User.UserName</span>
+                                <span class="member-badge">Thành viên</span>
+                                @* <span class="text-muted">• @Forum.Helpers.DateTimeHelper.ConvertDateToString(i.CreateAt.Value)</span> *@
+                            </div>
 
-        @* </div> *@
+                            <p class="mb-3" style="line-height: 1.7;">
+                                @i.Body
+                            </p>
+
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="me-2">
+                                        <button class="vote-btn" onclick="toggleVote(this, 'up')">
+                                            <i class="bi bi-hand-thumbs-up"></i>
+                                        </button>
+                                        <span class="vote-count">15</span>
+                                    </div>
+
+                                    <button class="vote-btn" onclick="toggleVote(this, 'down')">
+                                        <i class="bi bi-hand-thumbs-down"></i>
+                                    </button>
+                                </div>
+                                <button class="btn btn-sm btn-link text-decoration-none text-secondary p-0">
+                                    Trả lời
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
     </div>
 </div>
 

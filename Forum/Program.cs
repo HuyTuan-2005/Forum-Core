@@ -1,4 +1,4 @@
-﻿using Forum.Data;
+using Forum.Data;
 using Forum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +12,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppDbContext>();
+
 //Dang ky Identity
 builder.Services.AddIdentity<User, Role>().
     AddEntityFrameworkStores<AppDbContext>().
     AddDefaultTokenProviders();
+
 
 // Dang ky identity dùng UI
 
@@ -58,6 +61,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

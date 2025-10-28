@@ -3,7 +3,6 @@ using Forum.Models;
 using Forum.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Forum.Controllers
 {
@@ -33,13 +32,18 @@ namespace Forum.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(FormCollection collection)
+        public async Task<IActionResult> Login(IFormCollection collection)
         {
-            if (!ModelState.IsValid)
+            var user = await _userManager.FindByNameAsync(collection["username"]);
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, collection["password"], false);
+
+            if (!signInResult.Succeeded)
             {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(collection);
             }
-
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            
             return RedirectToAction("Index", "Question");
         }
 
@@ -58,12 +62,20 @@ namespace Forum.Controllers
                 return View(model);
             }
 
+            var profile = new Profile()
+            {
+                Birthday = Convert.ToDateTime("1/1/1790"),
+                DisplayName = "User",
+                Gender = "Nam"
+            };
+
             var user = new User()
             {
                 UserName = model.UserName,
                 Email = model.Email,
                 CreatedAt = DateTime.UtcNow,
                 LastActivity = DateTime.UtcNow,
+                Profile = profile
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -79,10 +91,13 @@ namespace Forum.Controllers
                 ModelState.AddModelError(error.Code, error.Description);
             }
             return View(model);
-
-
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Question");
+        }
 
     }
 }

@@ -1,9 +1,9 @@
-﻿using Forum.Data;
+﻿using System.Security.Claims;
+using Forum.Data;
 using Forum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Forum.Controllers
 {
@@ -28,12 +28,37 @@ namespace Forum.Controllers
             if (id.HasValue)
             {
                 var question = await _context.Questions
-                    .Include(q => q.User)       
-                    .Include(q => q.Tags)    
+                    .Include(q => q.User).ThenInclude(u => u.Profile)
+                    .Include(q => q.Tags)
+                    .Include(q => q.Answer).ThenInclude(a => a.User).ThenInclude(p => p.Profile) 
                     .FirstOrDefaultAsync(q => q.QuestionId == id.Value);
-                return View(_context.Questions.FirstOrDefault(t => t.QuestionId == id.Value));
+                
+                // ← QUAN TRỌNG: Check null trước khi return
+                if (question == null)
+                    return NotFound();  // Return 404 nếu không tìm thấy
+                
+                return View(question);
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PostAnswer(IFormCollection form)
+        {
+            int questionId = int.Parse(form["questionId"]);
+            string body = form["body"].ToString();
+            Answer answer = new Answer()
+            {
+                Body = body,
+                CreateAt = DateTime.Now,
+                QuestionId = questionId,
+                UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+            };
+            await _context.Answers.AddAsync(answer);
+            _context.SaveChanges();
+            return RedirectToAction("Details", new { id = questionId });
         }
 
         public IActionResult Ask()
@@ -42,6 +67,7 @@ namespace Forum.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Ask(IFormCollection form)
         {
@@ -50,7 +76,7 @@ namespace Forum.Controllers
                 Title = form["title"].ToString(),
                 Body = form["body"].ToString(),
                 CreateAt = DateTime.Now,
-                UserId = 1
+                UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
             };
 
             if (!string.IsNullOrWhiteSpace(form["tags"]))

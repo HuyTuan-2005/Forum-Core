@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    // ViewBag.Title = "Home Page";
 }
 
 @model IEnumerable<Forum.Models.Question>
@@ -112,7 +112,7 @@
                 {
                     <div class="forum-card">
                         <div class="d-flex gap-3">
-                            <a href=@Url.Action("Index", "Users", new { id = i.UserId })>
+                            <a href=@Url.Action("Index", "User", new { id = i.UserId })>
                                 <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
                                      alt="User" class="user-avatar">
                             </a>
@@ -139,8 +139,8 @@
 
                                 <div class="forum-stats">
                                     <span><i class="bi bi-chat"></i> @i.Answer.Count</span>
-                                    <span><i class="bi bi-eye"></i> 1250</span>
-                                    <span><i class="bi bi-hand-thumbs-up"></i> 48</span>
+                                    <span><i class="bi bi-eye"></i>0</span>
+                                    <span><i class="bi bi-hand-thumbs-up"></i>0</span>
                                     <span class="ms-auto"><i class="bi bi-clock"></i>@Forum.Helpers.DateTimeHelper.ConvertDateToString(i.CreateAt)</span>
                                 </div>
                             </div>
