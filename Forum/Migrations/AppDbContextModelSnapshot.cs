@@ -65,7 +65,8 @@ namespace Forum.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(55)
+                        .HasColumnType("nvarchar(55)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -99,7 +100,8 @@ namespace Forum.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -151,7 +153,8 @@ namespace Forum.Migrations
 
                     b.Property<string>("TagName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("TagId");
 
@@ -357,7 +360,7 @@ namespace Forum.Migrations
                         .HasForeignKey("QuestionId");
 
                     b.HasOne("Forum.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Answers")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Question");
@@ -460,6 +463,8 @@ namespace Forum.Migrations
 
             modelBuilder.Entity("Forum.Models.User", b =>
                 {
+                    b.Navigation("Answers");
+
                     b.Navigation("Profile")
                         .IsRequired();
 

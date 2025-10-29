@@ -80,15 +80,19 @@
     <div class="comment-section">
         <div class="comment-header">
             <div class="d-flex align-items-center gap-2 mb-3">
-                <h2 class="h6 mb-0 ">Viết câu trả lời của bạn</h2>
+                @if (Model.Answer.Count > 0)
+                {
+                    <h2 class="h6 mb-0">@Model.Answer.Count Câu trả lời khác</h2>
+                }
             </div>
             <!-- Reply Form -->
-            @using(Html.BeginForm("PostAnswer", "Question", FormMethod.Post, new{@class="d-flex gap-3"}))
+            @* @using(Html.BeginForm("PostAnswer", "Question", FormMethod.Post, new {@class="d-flex gap-3"})) *@
+            @using(Html.BeginForm("PostAnswer", "Question", new{ReturnUrl=Url.Action("Details", "Question", new{id=Model.QuestionId})}, FormMethod.Post, true, new {@class="d-flex gap-3"}))
             {
                 @Html.AntiForgeryToken()
                 @Html.Hidden("QuestionId", Model.QuestionId)
                 <div class="flex-grow-1">
-                    <textarea name="body" class="form-control mb-2" rows="3" placeholder="Viết câu trả lời của bạn..."></textarea>
+                    <textarea required name="body" class="form-control mb-2" rows="3" placeholder="Viết câu trả lời của bạn..."></textarea>
                     <div class="d-flex justify-content-end gap-2">
                         <button class="btn btn-outline-secondary btn-sm">Hủy</button>
                         <button class="btn btn-primary btn-sm">Gửi câu trả lời</button>
@@ -98,10 +102,6 @@
         </div>
 
         <div class="">
-            @if (Model.Answer.Count > 0)
-            {
-                <h2 class="h6 mb-0 p-4 pb-0">@Model.Answer.Count Câu trả lời khác</h2>
-            }
             <!-- Comment 1 -->
             @foreach (var i in Model.Answer)
             {

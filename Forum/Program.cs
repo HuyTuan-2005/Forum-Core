@@ -41,6 +41,12 @@ builder.Services.Configure<IdentityOptions>(options =>
     // Cấu hình về user
     // Email là duy nhất
     options.User.RequireUniqueEmail = true;
+
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/User/Login";
 });
 
 

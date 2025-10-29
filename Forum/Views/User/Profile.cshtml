@@ -1,0 +1,139 @@
+﻿@using Forum.Models
+@model Forum.Models.User
+
+<!-- Main Content -->
+<div class="container py-4">
+    <!-- Back Button -->
+    <a href="@Url.Action("Index", "Question")" class="btn btn-link text-decoration-none mb-4 p-0">
+        <i class="bi bi-arrow-left me-2"></i>Quay lại
+    </a>
+
+    <!-- Profile Header -->
+    <div class="post-container mb-4">
+
+        <!-- Profile Info -->
+        <div class="px-4 pb-4 my-3">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start mb-4">
+                <div class="d-flex flex-column flex-sm-row align-items-start gap-3">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop"
+                         alt="User" class="profile-avatar">
+
+                    <div class="mt-sm-4">
+                        <h1 class="h4 mb-1">@Model.Profile.DisplayName</h1>
+                        <p class="text-muted mb-2">@Model.Profile.Gender</p>
+
+                        <!-- Badges -->
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge" style="background-color: #eab308; color: white;">Top Contributor</span>
+                            <span class="badge" style="background-color: #22c55e; color: white;">Helpful</span>
+                            <span class="badge" style="background-color: #3b82f6; color: white;">React Expert</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3 mt-sm-0">
+                    <a href="@Url.Action("Edit", "User")" class="btn btn-outline-secondary">
+                        <i class="bi bi-pencil me-2"></i>Chỉnh sửa
+                    </a>
+                    <button class="btn btn-outline-secondary">
+                        <i class="bi bi-gear"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bio -->
+            <p class="text-muted mb-4">
+                Passionate about web development, React, and building great user experiences. Love sharing knowledge
+                with the community.
+            </p>
+
+            <!-- Meta Info -->
+            <div class="d-flex flex-wrap gap-4 small text-muted mb-4">
+                <div class="d-flex align-items-center gap-1">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>TP. Hồ Chí Minh, Việt Nam</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <i class="bi bi-link-45deg"></i>
+                    <a href="https://example.com" class="text-primary text-decoration-none">https://example.com</a>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <i class="bi bi-calendar"></i>
+                    <span>Tham gia từ tháng @Model.CreatedAt.ToString("M, yyyy")</span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="row g-3 pt-4 border-top">
+                <div class="col-6 col-sm text-center">
+                    <div class="h5 mb-0">@Model.Questions.Count</div>
+                    <div class="small text-muted">Bài viết</div>
+                </div>
+                <div class="col-6 col-sm text-center">
+                    <div class="h5 mb-0">1,542</div>
+                    <div class="small text-muted">@Model.Answers.Count</div>
+                </div>
+                <div class="col-6 col-sm text-center">
+                    <div class="h5 mb-0">1,850</div>
+                    <div class="small text-muted">Danh tiếng</div>
+                </div>
+                <div class="col-6 col-sm text-center">
+                    <div class="h5 mb-0">328</div>
+                    <div class="small text-muted">Người theo dõi</div>
+                </div>
+                <div class="col-12 col-sm text-center">
+                    <div class="h5 mb-0">156</div>
+                    <div class="small text-muted">Đang theo dõi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs custom-tabs bg-white rounded p-2 mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#posts">Bài viết</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#replies">Trả lời</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#saved">Đã lưu</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#activity">Hoạt động</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Posts Tab -->
+        <div class="tab-pane fade show active" id="posts">
+            @foreach (var i in Model.Questions)
+            {
+                @await Component.InvokeAsync("QuestionCard", new { question = i, questionId = i.QuestionId })
+            }
+        </div>
+
+        <!-- Replies Tab -->
+        <div class="tab-pane fade" id="replies">
+            <div class="post-container p-5 text-center">
+                <p class="text-muted mb-0">Chưa có trả lời nào</p>
+            </div>
+        </div>
+
+        <!-- Saved Tab -->
+        <div class="tab-pane fade" id="saved">
+            <div class="post-container p-5 text-center">
+                <p class="text-muted mb-0">Chưa có bài viết đã lưu</p>
+            </div>
+        </div>
+
+        <!-- Activity Tab -->
+        <div class="tab-pane fade" id="activity">
+            <div class="post-container p-5 text-center">
+                <p class="text-muted mb-0">Chưa có hoạt động</p>
+            </div>
+        </div>
+    </div>
+</div>

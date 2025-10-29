@@ -1,8 +1,10 @@
 ﻿using Forum.Data;
 using Forum.Models;
 using Forum.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Controllers
 {
@@ -21,18 +23,43 @@ namespace Forum.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public IActionResult Index()
+        
+        public IActionResult Index(int? id)
         {
-            return View("Login");
+            if(!id.HasValue)
+                return NotFound();
+            
+            var user = _context.Users
+                .Include(p => p.Profile)
+                .Include(q => q.Questions)
+                .Include(a => a.Answers)
+                .FirstOrDefault(x => x.Id == id.Value);
+            if(user == null)
+                return NotFound();
+            
+            return View("Profile", user);
         }
-        public IActionResult Login()
+
+        private IActionResult RedirectToPage(string ReturnUrl)
         {
+            // Prevent open redirect attacks
+            // 
+            if (Url.IsLocalUrl(ReturnUrl) && !string.IsNullOrEmpty(ReturnUrl))
+            {
+                return Redirect(ReturnUrl);
+            }
+            return RedirectToAction("Index", "Question");
+        }
+
+        public IActionResult Login(string ReturnUrl)
+        {
+            ViewData["ReturnUrl"] = ReturnUrl;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(IFormCollection collection)
+        public async Task<IActionResult> Login(IFormCollection collection, string ReturnUrl)
         {
             var user = await _userManager.FindByNameAsync(collection["username"]);
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, collection["password"], false);
@@ -44,7 +71,7 @@ namespace Forum.Controllers
             }
             await _signInManager.SignInAsync(user, isPersistent: false);
             
-            return RedirectToAction("Index", "Question");
+            return RedirectToPage(ReturnUrl);
         }
 
 

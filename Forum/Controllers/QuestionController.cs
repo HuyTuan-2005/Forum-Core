@@ -20,7 +20,13 @@ namespace Forum.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.Questions.Include(x => x.Tags).Include(x => x.Answer).ToList());
+            var lstQuestions = _context.Questions
+                .Include(q => q.User).ThenInclude(u => u.Profile)
+                .Include(q => q.Tags)
+                .Include(q => q.Answer)
+                .OrderByDescending(q => q.CreateAt)
+                .ToList();
+            return View(lstQuestions);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -71,10 +77,18 @@ namespace Forum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Ask(IFormCollection form)
         {
+            string title = form["title"].ToString();
+            string body = form["body"].ToString();
+            if(title.Length > 255)
+            {
+                ModelState.AddModelError(string.Empty, "Tiêu đề không được vượt quá 255 ký tự.");
+                return View();
+            }
+            
             Question question = new Question()
             {
-                Title = form["title"].ToString(),
-                Body = form["body"].ToString(),
+                Title = title,
+                Body = body,
                 CreateAt = DateTime.Now,
                 UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
             };
@@ -84,7 +98,7 @@ namespace Forum.Controllers
                 var tagNames = form["tags"].ToString()
                     .Split(",")
                     .Select(x => x.Trim())
-                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Where(x => !string.IsNullOrEmpty(x) && x.Length <= 20)
                     .Take(4)
                     .ToList();
 
@@ -109,8 +123,8 @@ namespace Forum.Controllers
             }
 
             await _context.Questions.AddAsync(question);
-            _context.SaveChanges();
-            return View();
+            _context.SaveChanges(); 
+            return RedirectToAction("Details", new { id = question.QuestionId });
         }
     }
 }

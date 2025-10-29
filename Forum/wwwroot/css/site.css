@@ -147,6 +147,10 @@ body {
     line-height: 1.5;
     color: #212529;
     font-weight: 500;
+    display: -webkit-box;        /* [web:16] */
+    -webkit-box-orient: vertical;/* [web:16] */
+    -webkit-line-clamp: 2;       /* số dòng muốn hiển thị, ví dụ 2 */ /* [web:16] */
+    overflow: hidden;
 }
 
 .forum-card:hover .forum-card-title {
@@ -157,6 +161,10 @@ body {
     line-height: 1.7;
     color: #6c757d;
     font-size: 0.9375rem;
+    display: -webkit-box;        /* [web:16] */
+    -webkit-box-orient: vertical;/* [web:16] */
+    -webkit-line-clamp: 2;       /* số dòng muốn hiển thị, ví dụ 2 */ /* [web:16] */
+    overflow: hidden;
 }
 
 .status-badge {

@@ -1,0 +1,39 @@
+﻿@model Forum.Models.Question
+
+<div class="forum-card">
+    <div class="d-flex gap-3">
+        <a href=@Url.Action("Index", "User", new { id = Model.UserId })>
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
+                 alt="User" class="user-avatar">
+        </a>
+        <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <a class="text-decoration-none forum-card-title"
+                   href="@Url.Action("Details", "Question", new { id = Model.QuestionId })">
+                    <h5 class="forum-card-title mb-0">@Model.Title</h5>
+                </a>
+                @* <span class="status-badge status-solved ms-2">Đã giải quyết</span> *@
+                @*<span class="status-badge status-pinned ms-2">Ghim</span>*@
+            </div>
+
+            <p class="forum-card-excerpt mb-3">
+                @Model.Body
+            </p>
+
+            <div class="">
+                @foreach (var tag in Model.Tags)
+                {
+                    <span class="tag">@tag.TagName</span>
+                }
+            </div>
+
+            <div class="forum-stats">
+                <span><i class="bi bi-chat"></i> @Model.Answer.Count</span>
+                <span><i class="bi bi-eye"></i>0</span>
+                <span><i class="bi bi-hand-thumbs-up"></i>0</span>
+                <span class="ms-auto"><i
+                        class="bi bi-clock"></i>@Forum.Helpers.DateTimeHelper.ConvertDateToString(Model.CreateAt)</span>
+            </div>
+        </div>
+    </div>
+</div>
