@@ -86,6 +86,8 @@
                     </div>
                 </div>
 
+                <div class="mb-3">@Model.Count() câu hỏi</div>
+
                 <!-- Tabs -->
                 <ul class="nav nav-tabs custom-tabs">
                     <li class="nav-item">
@@ -113,10 +115,50 @@
                     @await Component.InvokeAsync("QuestionCard", new { question = i })
                 }
                 <!-- Load More -->
-                <div class="text-center mt-4">
-                    <button class="btn btn-outline-secondary">Tải thêm bài viết</button>
+                <div class="align-items-center d-flex justify-content-center mt-4">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+
+                            <li class="page-item">
+                                @if ((int)ViewData["CurrentPage"] > 1)
+                                {
+                                    <a class="page-link" href="?page=@((int)ViewData["CurrentPage"] - 1)"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                }
+                            </li>
+
+                            @for(int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+                            {
+                                if (i == (int)ViewData["CurrentPage"])
+                                {
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#">@i</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=@i">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            <li class="page-item">
+                                @if ((int)ViewData["CurrentPage"] < (int)ViewData["TotalPages"])
+                                {
+                                    <a class="page-link" href="?page=@((int)ViewData["CurrentPage"] + 1)"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                }
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
+
     </main>
 </div>

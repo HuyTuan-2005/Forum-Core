@@ -18,15 +18,48 @@ namespace Forum.Controllers
             _logger = logger;
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string search, int? page = 1)
         {
-            var lstQuestions = _context.Questions
+            List<Question> lstQuestions = new List<Question>();
+            int pageSize = 10;
+            
+            if (!string.IsNullOrEmpty(search))
+            {
+                lstQuestions = await _context.Questions
+                    .Include(q => q.User).ThenInclude(u => u.Profile)
+                    .Include(q => q.Tags)
+                    .Include(q => q.Answer)
+                    .Where(q => q.Title.Contains(search) || q.Body.Contains(search))
+                    .OrderByDescending(q => q.CreateAt)
+                    .ToListAsync();
+            }
+            else
+            {
+                lstQuestions = _context.Questions
+                    .Include(q => q.User).ThenInclude(u => u.Profile)
+                    .Include(q => q.Tags)
+                    .Include(q => q.Answer)
+                    .OrderByDescending(q => q.CreateAt)
+                    .ToList();
+            }
+
+            ViewData["CurrentPage"] = page.Value;
+            ViewData["TotalPages"] = (int)Math.Ceiling((double)lstQuestions.Count / pageSize);
+                
+            lstQuestions = lstQuestions.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList();
+            return View(lstQuestions);
+        }
+        
+        public async Task<IActionResult> Search(string keyword)
+        {
+            var lstQuestions = await _context.Questions
                 .Include(q => q.User).ThenInclude(u => u.Profile)
                 .Include(q => q.Tags)
                 .Include(q => q.Answer)
+                .Where(q => q.Title.Contains(keyword) || q.Body.Contains(keyword))
                 .OrderByDescending(q => q.CreateAt)
-                .ToList();
-            return View(lstQuestions);
+                .ToListAsync();
+            return View("Index", lstQuestions);
         }
 
         public async Task<IActionResult> Details(int? id)
